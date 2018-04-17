@@ -144,6 +144,7 @@ inline typename Treap<Key, Value>::Node * Treap<Key, Value>::Node::lookup(const 
 		if (!current->left_) {
 			current->left_ = new Node(key);
 			retVal = current->left_;
+			rotate(root, parent, current, retVal, false);
 			//if (root->left_ != parent->left_ && root->left_ != retVal)
 			//	rotate(root, parent, parent->left_, retVal, false);
 			//else if (parent->left_ == current && current->left_ != retVal)
@@ -159,7 +160,10 @@ inline typename Treap<Key, Value>::Node * Treap<Key, Value>::Node::lookup(const 
 		/*	if (parent->left_ == current)
 				retVal = left_->lookup(key, root, current, current->left_, rotate(root, parent, current, retVal, false));
 			else if (parent->right_ == current)*/
-				retVal = left_->lookup(key, root, parent, current->right_, rotate(root, parent, current, retVal, false));
+			if(current != parent)
+				retVal = left_->lookup(key, root, current, current->left_, rotate(root, current, current->left_, retVal, false));
+			else
+				retVal = left->lookup(key, root, parent, current->left, rotate(root, parent, current, retVal));
 			rotate(root, parent, current, retVal, false);
 			return retVal;
 		}
